@@ -1,0 +1,2 @@
+- libs for glfw (build by mingw64)
+- lib for slow_array (build by mingw64)

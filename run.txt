@@ -4,8 +4,21 @@ g++ main.cpp drawer.cpp user_function.cpp -Llib-mingw-w64 -lglfw3 -lopengl32 -lg
 
 g++ main.cpp drawer.cpp user_function.cpp color.cpp slow_array.cpp -Llib-mingw-w64 -lglfw3 -lopengl32 -lgdi32
 
+g++ main.cpp drawer.cpp user_function.cpp color.cpp memory.cpp -Llib-mingw-w64 -lglfw3 -lopengl32 -lgdi32 -Dmsort -DSLOW
 
 
+// BUILD LIB
+mkdir obj_files
+g++ main.cpp -c -o obj_files\main.o
+g++ drawer.cpp -c -o obj_files\drawer.o
+g++ color.cpp -c -o obj_files\color.o
+g++ memory.cpp -DSLOW -c -o obj_files\memory.o 
+
+ar rcs lib\libslowarr.a .\obj_files\main.o .\obj_files\color.o .\obj_files\drawer.o .\obj_files\memory.o
+
+Remove-Item .\obj_files -Recurse
 
 
+// USE LIB
+g++ user_function.cpp -Llib-mingw-w64 -lslowarr -lglfw3 -lopengl32 -lgdi32
 

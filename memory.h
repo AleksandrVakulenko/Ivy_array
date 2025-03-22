@@ -3,6 +3,7 @@
 
 int get_window_w();
 int get_window_h();
+int get_mem_size();
 
 void init_memory();
 int allocate(int size);

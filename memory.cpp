@@ -1,18 +1,20 @@
 #include <initializer_list>
 #include <stdexcept>
-#include "slow_array.h"
+#include <vector>
+#include <stdlib.h>
+
+#include "memory.h"
 #include "graphics.h"
 #include "color.h"
 #include "drawer.h"
 #include "utils.h"
-#include <vector>
-#include "memory.h"
-#include <stdlib.h>
+
+
 
 
 #ifdef SLOW
-	const float allocate_mem_delay = 0.005;
-	const float elem_delay = 0.05;
+	const float allocate_mem_delay = 0.006;
+	const float elem_delay = 0.015;
 #else
 	const float allocate_mem_delay = 0.002;
 	const float elem_delay = 0.005;
@@ -25,8 +27,8 @@ const int max_elem_value = 99;
 const int row_margin_top = 3;
 const int row_margin_bot = 2;
 
-const int elements_per_row_number = 500;
-const int total_rows_num = 11;
+const int elements_per_row_number = 256+128;
+const int total_rows_num = 9;
 const int elements_row_inc = row_margin_top + max_elem_value + row_margin_bot;
 const int elements_incol_inc = 4;
 const int elem_line_width = 3;
@@ -40,14 +42,15 @@ const int height = elements_row_inc * total_rows_num;
 const int memory_size = total_rows_num * elements_per_row_number;
 
 bool is_init_memory = false;
+std::vector<color> allocation_color;
 std::vector<int> allocation_sizes;
 std::vector<bool> memory_flag;
 std::vector<line*> Lines;
 
-color_preset color_for_free_mem = color_preset::black;
-color_preset color_for_used_mem = color_preset::green;
-color_preset color_for_used_elem = color_preset::blue;
-color_preset color_for_special = color_preset::red;
+color color_for_free_mem = color(color_preset::black);
+color color_for_used_mem = color(color_preset::green);
+color color_for_used_elem = color(color_preset::blue);
+color color_for_special = color(color_preset::red);
 
 int get_window_w(){
 	return width;
@@ -57,12 +60,21 @@ int get_window_h(){
 	return height;
 }
 
+int get_mem_size(){
+	return memory_size;
+}
+
 void repaint_lines(){
+	/*
 	for (int i = 0; i < Lines.size(); i++){
 		if (memory_flag[i])
 			Lines[i]->set_color(color_for_used_mem);
 		else
 			Lines[i]->set_color(color_for_free_mem);
+	}
+	*/
+	for (int i = 0; i < Lines.size(); i++){
+		Lines[i]->set_color(allocation_color[i]);
 	}
 }
 
@@ -78,9 +90,10 @@ void init_memory(){
 		int y_top = y_bot - (0) - 1;
 		memory_flag.push_back(false);
 		allocation_sizes.push_back(0);
+		allocation_color.push_back(color_for_free_mem);
 		auto L = new line(x, y_bot, x, y_top, elem_line_width);
 		Lines.push_back(L);
-		L->set_color(color_for_free_mem);
+		repaint_lines();
 		drawer_add(L);
 	}
 	
@@ -95,7 +108,7 @@ void mem_set_elem(int adr, int v){
 		v = max_elem_value;
 	repaint_lines();
 	Lines[adr]->set_color(color_for_used_elem);
-	Lines[adr]->set_h(-v);
+	Lines[adr]->set_h(v);
 	pause(elem_delay);
 }
 
@@ -149,9 +162,12 @@ int allocate(int size){
 	//std::cout << adr << '\n';
 	if (adr != -1) {
 		allocation_sizes[adr] = size;
+		auto col = color(color_preset::green_random);
 		for (int i = adr; i < adr+size; i++){
 			memory_flag[i] = true;
-			Lines[i]->set_color(color_for_used_mem);
+			//Lines[i]->set_color(color_for_used_mem);
+			allocation_color[i] = col;
+			Lines[i]->set_color(allocation_color[i]);
 			pause(allocate_mem_delay);
 		}
 	}
@@ -166,6 +182,7 @@ void deallocate(int ptr){
 	allocation_sizes[ptr] = 0;
 	for (int i = ptr; i < ptr+size; i++){
 		memory_flag[i] = false;
+		allocation_color[i] = color_for_free_mem;
 		Lines[i]->set_color(color_for_free_mem);
 		pause(allocate_mem_delay);
 	}

@@ -1,20 +1,19 @@
 #include "GLFW/glfw3.h"
 #include <iostream>
 #include <vector>
-#include "graphics.h"
-#include "utils.h"
-#include "drawer.h"
-#include "slow_array.h"
 #include <thread>
+
+#include "drawer.h"
 #include "memory.h"
 
-void user_func();
+void user_thread();
 
-bool user_func_active = true;
+bool user_thread_active = true;
 
-void user_func_wrapper(){
-	user_func();
-	user_func_active = false;
+void user_thread_wrapper(){
+	user_thread();
+	user_thread_active = false;
+	std::cout << "STOP USER THREAD\n";
 }
 
 int main() {
@@ -30,38 +29,19 @@ int main() {
 		glTranslatef(-width/2.0, -height/2.0, 0);
 
 		init_memory();
+		std::cout << "Window size: " << width << "x" << height << '\n';
+		std::cout << "Memory size: " << get_mem_size() << '\n';
 
 		std::cout << "RUN USER THREAD\n";
-		std::thread draw_thread(user_func_wrapper);
+		std::thread draw_thread(user_thread_wrapper);
 		draw_thread.detach();
-		
 
-		/*
-        std::vector<line> l_arr;
-        for (int i = 0; i < 10; i++){
-            float x = 500 + 6*i;
-            l_arr.push_back(line(x, 0, x, i/9.0*100, 4));
-        }
-		*/       
-		
 
-        while(!glfwWindowShouldClose(window) && user_func_active)
+        while(!glfwWindowShouldClose(window) && user_thread_active)
         {
 				glfwPollEvents();
 				glClear(GL_COLOR_BUFFER_BIT);
-				glClearColor(0.5, 0.5, 0.5, 1);
-
-			
-				/*
-				line Lx(0, height/2, width, height/2);
-				line Ly(width/2, 0, width/2, height);
-				glColor3f(1, 0, 0);
-                Lx.draw();
-                glColor3f(0, 0, 1);
-                Ly.draw();
-				*/
-                
-                pause(0.05);
+				glClearColor(77/255.0, 134/255.0, 163/255.0, 1);
 
 				drawer_draw();
 

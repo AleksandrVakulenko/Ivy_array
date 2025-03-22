@@ -1,24 +1,14 @@
-#include "GLFW/glfw3.h"
-
-#include "graphics.h"
-#include "utils.h"
-
 #include <mutex>
 #include <thread>
 #include <iostream>
 #include <list>
 
+#include "GLFW/glfw3.h"
+#include "graphics.h"
+#include "utils.h"
 
 std::mutex mutex_for_drawer;
 std::list<graphic_object*> objs;
-
-void drawer_lock(){
-	mutex_for_drawer.lock();
-}
-
-void drawer_unlock(){
-	mutex_for_drawer.unlock();
-}
 
 void drawer_add(graphic_object* obj_ptr){
 	mutex_for_drawer.lock();
