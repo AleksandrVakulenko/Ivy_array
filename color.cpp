@@ -40,19 +40,19 @@ void operator<<(color& col, const color_preset& cp){
 		col.b = 0;
 		break;
 	case color_preset::red :
-		col.r = 0.8;
+		col.r = 1;
 		col.g = 0;
 		col.b = 0;
 		break;
 	case color_preset::green :
 		col.r = 0;
-		col.g = 0.8;
+		col.g = 1;
 		col.b = 0;
 		break;
 	case color_preset::blue :
 		col.r = 0;
 		col.g = 0;
-		col.b = 0.8;
+		col.b = 1;
 		break;
 	case color_preset::orange :
 		col.r = 1;

@@ -130,16 +130,22 @@ line& get_line_ptr(int index){
 	return *Lines[index];
 }
 
+
+bool test_block(int ptr, int size){
+	bool is_used = false;
+	for (int j = ptr; j < ptr+size; j++){
+		auto flag = memory_flag[j];
+		if (flag == true){
+			is_used = true;
+		}
+	}
+	return is_used;
+}
+
 int find_free_block(int size){
 	for (int i = 0; i <= memory_size-size; i++){
-		bool used = false;
-		for (int j = i; j < i+size; j++){
-			auto flag = memory_flag[j];
-			if (flag == true){
-				used = true;
-			}
-		}
-		if (!used)
+		bool is_used = test_block(i, size);
+		if (!is_used)
 			return i;
 	}
 	return -1;
@@ -174,8 +180,29 @@ int allocate(int size){
 	return adr;
 }
 
+bool extend(int prev_ptr, int size){
+	if (size > memory_size)
+		throw std::runtime_error("Not enought memory");
+	int prev_size = allocation_sizes[prev_ptr];
+	int ptr = prev_ptr + prev_size;
+	bool is_used = test_block(ptr, size);
+	if (is_used)
+		return false;
+	allocation_sizes[prev_ptr] += size;
+	auto col = allocation_color[prev_ptr];
+	for (int i = ptr; i < ptr+size; i++){
+		memory_flag[i] = true;
+		allocation_color[i] = col;
+		Lines[i]->set_color(allocation_color[i]);
+		pause(allocate_mem_delay);
+	}
+	return true;
+}
+
 
 void deallocate(int ptr){
+	if (ptr == -1)
+		return;
 	if (allocation_sizes[ptr] == 0)
 		throw std::runtime_error("bad deallocation");
 	int size = allocation_sizes[ptr];

@@ -99,53 +99,43 @@ slow_array foo(slow_array arr){
 
 
 void user_thread(){
+
 	
-	/*
+	#ifdef ssort
 	slow_array arr(50);
 	arr.make_rand();
-	
 	double time_1 = glfwGetTime();
-	#ifdef ssort
 	slow_sort(arr);
+	double time_2 = glfwGetTime();
+	std::cout << time_2 - time_1 << " s \n";
 	#endif
 	
 	#ifdef msort
+	slow_array arr(50);
+	arr.make_rand();
+	double time_1 = glfwGetTime();
 	mergeSort(arr, 0, arr.size()-1);
-	#endif
-	
 	double time_2 = glfwGetTime();
 	std::cout << time_2 - time_1 << " s \n";
-	pause(2);
+	#endif
 	
-	*/
 	
-	//slow_array arr1(100,0);
-	//slow_array arr2 = foo(arr1);
+	
+	slow_array arr1(100,0);
+	slow_array arr2 = foo(arr1);
 	
 	//for(int i = 0; i<arr2.size(); i++){
 	//	std::cout << arr2[i] << '\n';
 	//}
 	
-	slow_array arr1(50,0);
-	slow_array arr2(50,0);
-	slow_array arr3(50,0);
-	slow_array arr4(50,0);
-	slow_array arr5(50,0);
-	slow_array arr6(50,0);
-	slow_array arr7(50,0);
-	slow_array arr8(50,0);
-	slow_array arr9(50,0);
-	slow_array arr10(50,0);
-	slow_array arr11(50,0);
-	slow_array arr12(50,0);
-	slow_array arr13(50,0);
-	slow_array arr14(50,0);
-	slow_array arr15(50,0);
-	slow_array arr16(50,0);
-	slow_array arr17(50,0);
-	slow_array arr18(50,0);
-	slow_array arr19(50,0);
-	slow_array arr20(50,0);
+	//slow_array arr1(50,0);
+	//slow_array arr2(100,0);
+
+	
+	pause(1);
+
+	//arr1.push_back(arr2);
+	
 	
 }
 

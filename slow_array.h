@@ -1,37 +1,45 @@
 #pragma once
 #include <initializer_list>
 #include <stdexcept>
+#include <utility>
 #include "memory.h"
 #include "graphics.h"
 
-class itarator final {
+class iterator final {
 int itptr_;
 	
 public:
-	itarator(int p) : itptr_(p) {}
-	itarator(const itarator& it) : itptr_(it.itptr_) {}
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = int;
+    using difference_type = int;
+    using pointer = int*;
+    using reference = int&;
+
+	iterator(int p);
+	iterator(const iterator& it);
 	
-	int& operator*(){
-		return get_line_ptr(itptr_).get_p2y_ref();
-	}
+	int& operator*() const;
 	
-	itarator& operator++(){
-		itptr_++;
-		return *this;
-	}
+	iterator& operator++();
 	
-	itarator operator++(int){
-		itarator tmp(itptr_);
-		itptr_++;
-		return tmp;
-	}
+	iterator operator++(int);
 	
-	itarator operator+(int index){
-		return itarator(itptr_+index);
-	}
+	iterator& operator--();
 	
-	itarator operator-(int index){
-		return itarator(itptr_-index);
+	iterator operator--(int);
+	
+	iterator operator+(int index) const;
+	
+	iterator operator-(int index) const;
+	
+	int operator-(const iterator& it) const;
+	
+	bool operator==(const iterator& it) const;
+	
+	bool operator!=(const iterator& it) const;
+	
+	bool operator<(const iterator& it) const{
+		return itptr_ < it.itptr_;
 	}
 };
 
@@ -39,74 +47,59 @@ class slow_array final {
 	int size_;
 	int ptr_;
 	
+	void realloc(int new_size);
 	
-	public: //------------------------------------------------------------------
+public:
 	
-	slow_array(int size){
-		size_ = size;
-		ptr_ = allocate(size_);
-		if (ptr_ == -1)
-			throw std::runtime_error("Bag allocation in slow_array");
-	}
+	slow_array(int size);
 	
-	slow_array(int size, int){
-		size_ = size;
-		ptr_ = allocate(size_);
-		if (ptr_ == -1)
-			throw std::runtime_error("Bag allocation in slow_array");
-		make_rand();
-	}
+	slow_array(int size, int);
 	
-	slow_array(std::initializer_list<int> L){
-		size_ = L.size();
-		ptr_ = allocate(size_);
-		if (ptr_ == -1)
-			throw std::runtime_error("Bag allocation in slow_array");
-		auto p = ptr_;
-		for (auto& el:L){
-			mem_set_elem(p++, el);
-		}
-	}
+	slow_array(std::initializer_list<int> L);
 	
-	slow_array(const slow_array& arr){
-		size_ = arr.size_;
-		ptr_ = allocate(size_);
-		
-		for (int i = 0; i < arr.size_; i++){
-			this->operator[](i) = arr[i];
-		}
-	}
+	slow_array(const slow_array& arr);
 	
-	void make_rand(){
-		for (int i = ptr_; i < ptr_+size_; i++)
-			mem_set_elem(i, rand()%99);
-	}
+	slow_array(slow_array&& arr) : slow_array(arr) {};
 	
-	slow_array operator=(const slow_array&) = delete;
-	
-	int& operator[](int index) {
-		return get_line_ptr(ptr_+index).get_p2y_ref();
-	}
-	
-	int operator[](int index) const {
-		return get_line_ptr(ptr_+index).get_p2y_ref();
-	}
-	
-	int size() const {
-		return size_;
-	}
-	
-	itarator begin() const {
-		return itarator(ptr_);
-	}
-	
-	itarator end() const {
-		return itarator(ptr_+size_);
-	}
-	
-	~slow_array(){
+	slow_array operator=(const slow_array& arr){
+		if(ptr_ == arr.ptr_)
+			return *this;
 		deallocate(ptr_);
-	}
+		size_ = arr.size();
+		ptr_ = allocate(size_);
+		for (int i = 0; i < arr.size_; i++){
+			(*this)[i] = arr[i];
+		}
+		return *this;
+	};
+	
+	slow_array operator=(slow_array&& arr){
+		(*this) = arr;
+		return *this;
+	};
+	
+	slow_array(iterator b_it, iterator e_it);
+	
+	~slow_array();
+	
+	
+	void make_rand();
+	
+	void push_back(int v);
+	
+	void push_back(const slow_array& arr);
+
+	int& operator[](int index);
+	
+	int operator[](int index) const;
+	
+	int size() const;
+	
+	iterator begin() const;
+	
+	iterator end() const;
+	
+
 };
 
 

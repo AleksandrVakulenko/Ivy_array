@@ -1,24 +1,19 @@
-g++ main.cpp draw.cpp -Llib-mingw-w64 -lglfw3 -lopengl32 -lgdi32
-
-g++ main.cpp drawer.cpp user_function.cpp -Llib-mingw-w64 -lglfw3 -lopengl32 -lgdi32
-
-g++ main.cpp drawer.cpp user_function.cpp color.cpp slow_array.cpp -Llib-mingw-w64 -lglfw3 -lopengl32 -lgdi32
-
-g++ main.cpp drawer.cpp user_function.cpp color.cpp memory.cpp -Llib-mingw-w64 -lglfw3 -lopengl32 -lgdi32 -Dmsort -DSLOW
+// old
+g++ main.cpp slow_array.cpp drawer.cpp user_thread.cpp color.cpp memory.cpp -Llib -lglfw3 -lopengl32 -lgdi32 -DSLOW
 
 
-// BUILD LIB
+// BUILD LIB SCRIPT (build_libs.bat)
 mkdir obj_files
-g++ main.cpp -c -o obj_files\main.o
-g++ drawer.cpp -c -o obj_files\drawer.o
-g++ color.cpp -c -o obj_files\color.o
-g++ memory.cpp -DSLOW -c -o obj_files\memory.o 
+g++ main.cpp -O2 -c -o obj_files\main.o
+g++ drawer.cpp -O2 -c -o obj_files\drawer.o
+g++ color.cpp -O2 -c -o obj_files\color.o
+g++ memory.cpp -O2 -DSLOW -c -o obj_files\memory.o 
 
 ar rcs lib\libslowarr.a .\obj_files\main.o .\obj_files\color.o .\obj_files\drawer.o .\obj_files\memory.o
 
-Remove-Item .\obj_files -Recurse
+rmdir /s /q .\obj_files
 
 
-// USE LIB
-g++ user_function.cpp -Llib-mingw-w64 -lslowarr -lglfw3 -lopengl32 -lgdi32
-
+// USE LIB (run.bat)
+g++ -o main.exe user_thread.cpp -O2 -Llib -lslowarr -lglfw3 -lopengl32 -lgdi32
+main.exe
