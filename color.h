@@ -3,7 +3,7 @@
 #include "GLFW/glfw3.h"
 
 enum class color_preset{
-	red, green, blue, orange, yellow, cian
+	white, black, red, green, blue, orange, yellow, cian, random
 };
 
 

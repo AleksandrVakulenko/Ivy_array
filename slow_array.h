@@ -2,8 +2,7 @@
 #include <initializer_list>
 #include "graphics.h"
 
-int get_window_w();
-int get_window_h();
+
 
 
 class slow_array final {

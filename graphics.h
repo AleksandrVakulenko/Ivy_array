@@ -18,7 +18,7 @@ class graphic_object{
 	
 	
 	public:
-	graphic_object() : col(0,0,0) {}
+	graphic_object() : col(0, 0, 0) {}
 	
 	void draw() {
 		col.apply();
@@ -74,6 +74,14 @@ class line final : public graphic_object{
 		p1 = L.p1;
 		p2 = L.p2;
 		return *this;
+	}
+	
+	void set_h(int v){
+		p2 = p1 + vec3(0, v, 0);
+	}
+	
+	int get_h(){
+		return (p1-p2).y;
 	}
 	
 };

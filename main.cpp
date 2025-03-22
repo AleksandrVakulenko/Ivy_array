@@ -6,7 +6,7 @@
 #include "drawer.h"
 #include "slow_array.h"
 #include <thread>
-
+#include "memory.h"
 
 void user_func();
 
@@ -28,6 +28,8 @@ int main() {
 		glLoadIdentity();
 		glScalef(1/(width/2.0), -1/(height/2.0), 1);
 		glTranslatef(-width/2.0, -height/2.0, 0);
+
+		init_memory();
 
 		std::cout << "RUN USER THREAD\n";
 		std::thread draw_thread(user_func_wrapper);

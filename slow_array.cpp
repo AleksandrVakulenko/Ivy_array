@@ -37,13 +37,7 @@ const int rect_h_size = marg_bot + max_elem_value + marg_top;
 const int width = 1000;
 const int height = (rect_h_size + marg_bot_outer) * rows_num;
 
-int get_window_w(){
-	return width;
-}
 
-int get_window_h(){
-	return height;
-}
 
 int get_rect_w_size(int size){
 	return marg_left + (size)*per_elem + marg_right;
