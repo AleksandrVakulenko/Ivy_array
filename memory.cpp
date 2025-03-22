@@ -39,6 +39,7 @@ const int height = elements_row_inc * total_rows_num;
 
 const int memory_size = total_rows_num * elements_per_row_number;
 
+bool is_init_memory = false;
 std::vector<int> allocation_sizes;
 std::vector<bool> memory_flag;
 std::vector<line*> Lines;
@@ -66,6 +67,9 @@ void repaint_lines(){
 }
 
 void init_memory(){
+	if (is_init_memory)
+		return;
+	is_init_memory = true;
 	for (int i = 0; i < memory_size; i++){
 		int elem_row = (i / elements_per_row_number + 1) * elements_row_inc;
 		int elem_col = (i % elements_per_row_number) * elements_incol_inc + row_left_shift;
@@ -82,18 +86,7 @@ void init_memory(){
 	
 }
 
-void mod_lines(){
-	for (int i = 0; i < memory_size; i++){
-		int el_v = rand()%99;
-		Lines[i]->set_h(-el_v-1);
-		memory_flag[i] = true;
-		//std::cout << el_v << " " << Lines[i]->get_h()-1 << '\n';
-		pause(elem_delay);
-	}
-	
-}
-
-void set_elem(int adr, int v){
+void mem_set_elem(int adr, int v){
 	if (adr < 0 || adr >= memory_size)
 		throw std::runtime_error("segmentation fault");
 	if (v < min_elem_value)
@@ -106,13 +99,23 @@ void set_elem(int adr, int v){
 	pause(elem_delay);
 }
 
-int get_elem(int adr){
+int mem_get_elem(int adr){
 	if (adr < 0 || adr >= memory_size)
 		throw std::runtime_error("segmentation fault");
+	repaint_lines();
+	Lines[adr]->set_color(color_for_used_elem);
+	pause(elem_delay);	
 	return Lines[adr]->get_h();
-	pause(elem_delay);
 }
 
+line& get_line_ptr(int index){
+	if (index < 0 || index >= memory_size)
+		throw std::runtime_error("segmentation fault");
+	repaint_lines();
+	Lines[index]->set_color(color_for_used_elem);
+	pause(elem_delay);
+	return *Lines[index];
+}
 
 int find_free_block(int size){
 	for (int i = 0; i <= memory_size-size; i++){
@@ -140,22 +143,18 @@ void print_mem_map(){
 
 int allocate(int size){
 	if (size > memory_size)
-		throw std::runtime_error("Not enought memory (1)");
-	
+		throw std::runtime_error("Not enought memory");
 	//print_mem_map();
-	
 	int adr = find_free_block(size);
-	std::cout << adr << '\n';
-	if (adr == -1)
-		throw std::runtime_error("Not enought memory (2)");
-	
-	allocation_sizes[adr] = size;
-	for (int i = adr; i < adr+size; i++){
-		memory_flag[i] = true;
-		Lines[i]->set_color(color_for_used_mem);
-		pause(allocate_mem_delay);
+	//std::cout << adr << '\n';
+	if (adr != -1) {
+		allocation_sizes[adr] = size;
+		for (int i = adr; i < adr+size; i++){
+			memory_flag[i] = true;
+			Lines[i]->set_color(color_for_used_mem);
+			pause(allocate_mem_delay);
+		}
 	}
-	
 	return adr;
 }
 

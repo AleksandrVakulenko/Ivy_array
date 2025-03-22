@@ -1,15 +1,14 @@
 #pragma once
+#include "graphics.h"
 
 int get_window_w();
 int get_window_h();
 
 void init_memory();
-void mod_lines();
-void repaint_lines();
-
 int allocate(int size);
 void deallocate(int ptr);
 
-void set_elem(int adr, int v);
-int get_elem(int adr);
+void mem_set_elem(int adr, int v);
+int mem_get_elem(int adr);
 
+line& get_line_ptr(int index);

@@ -84,6 +84,10 @@ class line final : public graphic_object{
 		return (p1-p2).y;
 	}
 	
+	float& get_p2y_ref(){
+		return p2.y;
+	}
+	
 };
 
 

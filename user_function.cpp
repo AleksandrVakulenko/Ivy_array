@@ -16,7 +16,7 @@ void alloc(){
 	ptrs.push_back(ptr);
 	
 	for (int j = ptr; j < ptr+size; j++){
-		set_elem(j, rand()%99);
+		mem_set_elem(j, rand()%99);
 	}
 }
 
@@ -35,47 +35,46 @@ void user_func(){
 	for (int i = 0; i < arr.size(); i+=1)
 		arr[i];
 	
-	
 	#endif
+
+	/*
+	alloc();
+	alloc();
+	alloc();
+	alloc();
+	alloc();
+	alloc();
+	dealloc();
+	alloc();
+	alloc();
+	dealloc();
+	alloc();
+	dealloc();
+	dealloc();
+	dealloc();
+	alloc();
+	alloc();
+	dealloc();
+	dealloc();
+	alloc();
+	dealloc();
+	dealloc();
+	dealloc();
+	alloc();
+	dealloc();
+	alloc();
+	dealloc();
+	dealloc();
+	dealloc();
+	*/
 	
 	
-	init_memory();
-	pause(1.5);
+	slow_array arr(90);
 	
-	//mod_lines();
-	//repaint_lines();
-	//pause(1.5);
-	
-	
-	alloc();
-	alloc();
-	alloc();
-	alloc();
-	alloc();
-	alloc();
-	dealloc();
-	alloc();
-	alloc();
-	dealloc();
-	alloc();
-	dealloc();
-	dealloc();
-	dealloc();
-	alloc();
-	alloc();
-	dealloc();
-	dealloc();
-	alloc();
-	dealloc();
-	dealloc();
-	dealloc();
-	alloc();
-	dealloc();
-	alloc();
-	dealloc();
-	dealloc();
-	dealloc();
-		
+	for (int i = 0; i < arr.size(); i++){
+		arr[i] = i;
+	}
+
 	
 	pause(2);
 }

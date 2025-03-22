@@ -12,9 +12,6 @@
 std::mutex mutex_for_drawer;
 std::list<graphic_object*> objs;
 
-
-bool is_init = false;
-
 void drawer_lock(){
 	mutex_for_drawer.lock();
 }
@@ -45,14 +42,7 @@ void drawer_draw(){
 	mutex_for_drawer.unlock();
 }
 
-void init_drawer(){
-	if (is_init)
-		return;
 
-	//std::cout << "INIT DRAWER\n";
-	//std::thread draw_thread(drawer_thread_func);
-	//draw_thread.detach();
-}
 
 
 
