@@ -1,0 +1,11 @@
+g++ main.cpp draw.cpp -Llib-mingw-w64 -lglfw3 -lopengl32 -lgdi32
+
+g++ main.cpp drawer.cpp user_function.cpp -Llib-mingw-w64 -lglfw3 -lopengl32 -lgdi32
+
+g++ main.cpp drawer.cpp user_function.cpp color.cpp slow_array.cpp -Llib-mingw-w64 -lglfw3 -lopengl32 -lgdi32
+
+
+
+
+
+
