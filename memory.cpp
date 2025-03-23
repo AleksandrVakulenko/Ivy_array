@@ -10,8 +10,6 @@
 #include "utils.h"
 
 
-
-
 #ifdef SLOW
 	const float allocate_mem_delay = 0.006;
 	const float elem_delay = 0.015;
@@ -27,8 +25,8 @@ const int max_elem_value = 99;
 const int row_margin_top = 3;
 const int row_margin_bot = 2;
 
-const int elements_per_row_number = 256+128;
-const int total_rows_num = 9;
+const int elements_per_row_number = 280;//256+128;
+const int total_rows_num = 8; //9
 const int elements_row_inc = row_margin_top + max_elem_value + row_margin_bot;
 const int elements_incol_inc = 4;
 const int elem_line_width = 3;
@@ -37,7 +35,8 @@ const int row_left_shift = elements_incol_inc/2;
 const int width = elements_incol_inc*elements_per_row_number + row_left_shift;
 const int height = elements_row_inc * total_rows_num;
 
-
+int number_of_allocs = 0;
+int number_of_deallocs = 0;
 
 const int memory_size = total_rows_num * elements_per_row_number;
 
@@ -65,16 +64,19 @@ int get_mem_size(){
 }
 
 void repaint_lines(){
-	/*
-	for (int i = 0; i < Lines.size(); i++){
-		if (memory_flag[i])
-			Lines[i]->set_color(color_for_used_mem);
-		else
-			Lines[i]->set_color(color_for_free_mem);
-	}
-	*/
 	for (int i = 0; i < Lines.size(); i++){
 		Lines[i]->set_color(allocation_color[i]);
+	}
+}
+
+void print_allocs_num(){
+	int delta = number_of_allocs - number_of_deallocs;
+	std::cout << "  Allocations: " << number_of_allocs << '\n';
+	std::cout << "Deallocations: " << number_of_deallocs << " ";
+	if (delta == 0){
+		std::cout << "(no memory leaks)\n";
+	} else {
+		std::cout << "(memory leaks " << delta << " times !!!)\n";
 	}
 }
 
@@ -177,6 +179,7 @@ int allocate(int size){
 			pause(allocate_mem_delay);
 		}
 	}
+	number_of_allocs++;
 	return adr;
 }
 
@@ -213,6 +216,7 @@ void deallocate(int ptr){
 		Lines[i]->set_color(color_for_free_mem);
 		pause(allocate_mem_delay);
 	}
+	number_of_deallocs++;
 }
 
 

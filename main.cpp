@@ -14,6 +14,7 @@ void user_thread_wrapper(){
 	user_thread();
 	user_thread_active = false;
 	std::cout << "STOP USER THREAD\n";
+	print_allocs_num();
 }
 
 int main() {

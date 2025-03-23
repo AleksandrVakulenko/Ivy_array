@@ -78,7 +78,7 @@ void mergeSort(ivy &arr, int l, int r) {
 void user_thread(){
 
 	std::vector<ivy*> array_of_ivy;
-	int N = 20;
+	int N = 15;
 	
 	for (int i = 0; i < N; i++)
 		array_of_ivy.push_back(new ivy(rand()%80+20,50));
@@ -100,9 +100,11 @@ void user_thread(){
 		array_of_ivy.push_back(new ivy(rand()%80+20,99));
 	
 	
-	for(int i = 0; i<N; i++)
-		std::sort(array_of_ivy[i]->begin(), array_of_ivy[i]->end());
-	
+	//for(int i = 0; i<N; i++)
+	//	std::sort(array_of_ivy[i]->begin(), array_of_ivy[i]->end());
+	pause(2);
+	for(auto el:array_of_ivy)
+		delete el;
 }
 
 

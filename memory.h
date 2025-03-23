@@ -6,6 +6,8 @@ int get_window_h();
 int get_mem_size();
 
 void init_memory();
+void print_allocs_num();
+
 int allocate(int size);
 void deallocate(int ptr);
 bool extend(int prev_ptr, int size);

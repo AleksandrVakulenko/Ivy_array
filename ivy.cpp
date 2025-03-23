@@ -1,9 +1,8 @@
 #include <initializer_list>
 #include <stdexcept>
-#include "memory.h"
-#include "graphics.h"
 #include "ivy.h"
-
+#include "memory.h"
+//#include "graphics.h"
 
 iterator::iterator(int p) : itptr_(p) {}
 iterator::iterator(const iterator& it) : itptr_(it.itptr_) {}
