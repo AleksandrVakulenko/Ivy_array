@@ -5,12 +5,8 @@
 #include "ivy.h"
 
 
-iterator::iterator(int p) : itptr_(p) {
-	
-}
-iterator::iterator(const iterator& it) : itptr_(it.itptr_) {
-	
-}
+iterator::iterator(int p) : itptr_(p) {}
+iterator::iterator(const iterator& it) : itptr_(it.itptr_) {}
 
 int& iterator::operator*() const {
 	return get_line_ptr(itptr_).get_p2y_ref();
@@ -57,8 +53,21 @@ bool iterator::operator!=(const iterator& it) const {
 	return !(*this == it);
 }
 
+bool iterator::operator<(const iterator& it) const{
+	return itptr_ < it.itptr_;
+}
 
+bool iterator::operator>=(const iterator& it) const{
+	return !(*this < it);
+}
 
+bool iterator::operator>(const iterator& it) const{
+	return !(*this < it) && !(*this == it);
+}
+
+bool iterator::operator<=(const iterator& it) const{
+	return !(*this > it);
+}
 
 ivy::ivy(int size){
 	size_ = size;
@@ -67,12 +76,16 @@ ivy::ivy(int size){
 		throw std::runtime_error("Bag allocation in ivy");
 }
 
-ivy::ivy(int size, int){
+ivy::ivy(int size, int value){
 	size_ = size;
 	ptr_ = allocate(size_);
 	if (ptr_ == -1)
 		throw std::runtime_error("Bag allocation in ivy");
-	make_rand();
+	if (value == -1)
+		make_rand();
+	if ((value >= 0) && (value <=99))
+		for (int i = 0; i < size_; i++)
+			(*this)[i] = value;
 }
 
 ivy::ivy(std::initializer_list<int> L){
@@ -94,6 +107,25 @@ ivy::ivy(const ivy& arr){
 		(*this)[i] = arr[i];
 	}
 }
+
+ivy::ivy(ivy&& arr) : ivy(arr) {};
+
+ivy ivy::operator=(const ivy& arr){
+	if(ptr_ == arr.ptr_)
+		return *this;
+	deallocate(ptr_);
+	size_ = arr.size();
+	ptr_ = allocate(size_);
+	for (int i = 0; i < arr.size_; i++){
+		(*this)[i] = arr[i];
+	}
+	return *this;
+};
+
+ivy ivy::operator=(ivy&& arr){
+	(*this) = arr;
+	return *this;
+};
 
 ivy::ivy(iterator b_it, iterator e_it){
 	int size = e_it - b_it;
@@ -135,10 +167,11 @@ void ivy::push_back(int v){
 }
 
 void ivy::push_back(const ivy& arr){
-	int old_size = size_;
+	int arr_size = arr.size();
+	int end_pos = size_;
 	realloc(size_+arr.size());
-	for (int i = 0; i<arr.size(); i++){
-		(*this)[old_size+i] = arr[i];
+	for (int i = 0; i<arr_size; i++){
+		(*this)[end_pos+i] = arr[i];
 	}
 }
 

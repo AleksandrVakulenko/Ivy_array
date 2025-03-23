@@ -227,6 +227,7 @@ void user_thread(){
 	}
 	//*/
 	
+	/*
 	{
 	pause(1);
 	ivy arr = gen_rand(N);
@@ -236,6 +237,7 @@ void user_thread(){
 	time_2 = glfwGetTime();
 	std::cout << time_2 - time_1 << " s \n";
 	}
+	//*/
 	
 	/*
 	{
@@ -249,6 +251,7 @@ void user_thread(){
 	}
 	//*/
 	
+	/*
 	{
 	pause(1);
 	ivy arr = gen_rand(N);
@@ -258,6 +261,7 @@ void user_thread(){
 	time_2 = glfwGetTime();
 	std::cout << time_2 - time_1 << " s \n";
 	}
+	//*/
 
 	{
 	pause(1);
