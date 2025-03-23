@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "memory.h"
 #include "graphics.h"
-#include "slow_array.h"
+#include "ivy.h"
 
 
 iterator::iterator(int p) : itptr_(p) {
@@ -60,33 +60,33 @@ bool iterator::operator!=(const iterator& it) const {
 
 
 
-slow_array::slow_array(int size){
+ivy::ivy(int size){
 	size_ = size;
 	ptr_ = allocate(size_);
 	if (ptr_ == -1)
-		throw std::runtime_error("Bag allocation in slow_array");
+		throw std::runtime_error("Bag allocation in ivy");
 }
 
-slow_array::slow_array(int size, int){
+ivy::ivy(int size, int){
 	size_ = size;
 	ptr_ = allocate(size_);
 	if (ptr_ == -1)
-		throw std::runtime_error("Bag allocation in slow_array");
+		throw std::runtime_error("Bag allocation in ivy");
 	make_rand();
 }
 
-slow_array::slow_array(std::initializer_list<int> L){
+ivy::ivy(std::initializer_list<int> L){
 	size_ = L.size();
 	ptr_ = allocate(size_);
 	if (ptr_ == -1)
-		throw std::runtime_error("Bag allocation in slow_array");
+		throw std::runtime_error("Bag allocation in ivy");
 	auto p = ptr_;
 	for (auto& el:L){
 		mem_set_elem(p++, el);
 	}
 }
 
-slow_array::slow_array(const slow_array& arr){
+ivy::ivy(const ivy& arr){
 	size_ = arr.size_;
 	ptr_ = allocate(size_);
 	
@@ -95,14 +95,14 @@ slow_array::slow_array(const slow_array& arr){
 	}
 }
 
-slow_array::slow_array(iterator b_it, iterator e_it){
+ivy::ivy(iterator b_it, iterator e_it){
 	int size = e_it - b_it;
 	if (size <= 0)
 		throw std::runtime_error("second iterator must be greater than first");
 	size_ = size;
 	ptr_ = allocate(size_);
 	if (ptr_ == -1)
-		throw std::runtime_error("Bag allocation in slow_array");
+		throw std::runtime_error("Bag allocation in ivy");
 	
 	int i = 0;
 	while(b_it != e_it) {
@@ -112,7 +112,7 @@ slow_array::slow_array(iterator b_it, iterator e_it){
 	}
 }
 
-void slow_array::realloc(int new_size){
+void ivy::realloc(int new_size){
 	int need_size = new_size - size_;
 	bool flag = extend(ptr_, need_size);
 	if (flag){
@@ -129,12 +129,12 @@ void slow_array::realloc(int new_size){
 	size_ = new_size;
 }
 
-void slow_array::push_back(int v){
+void ivy::push_back(int v){
 	realloc(size_+1);
 	(*this)[size_-1] = v;
 }
 
-void slow_array::push_back(const slow_array& arr){
+void ivy::push_back(const ivy& arr){
 	int old_size = size_;
 	realloc(size_+arr.size());
 	for (int i = 0; i<arr.size(); i++){
@@ -142,33 +142,33 @@ void slow_array::push_back(const slow_array& arr){
 	}
 }
 
-void slow_array::make_rand(){
+void ivy::make_rand(){
 	for (int i = ptr_; i < ptr_+size_; i++)
 		mem_set_elem(i, rand()%99);
 }
 
 
-int& slow_array::operator[](int index) {
+int& ivy::operator[](int index) {
 	return get_line_ptr(ptr_+index).get_p2y_ref();
 }
 
-int slow_array::operator[](int index) const {
+int ivy::operator[](int index) const {
 	return get_line_ptr(ptr_+index).get_p2y_ref();
 }
 
-int slow_array::size() const {
+int ivy::size() const {
 	return size_;
 }
 
-iterator slow_array::begin() const {
+iterator ivy::begin() const {
 	return iterator(ptr_);
 }
 
-iterator slow_array::end() const {
+iterator ivy::end() const {
 	return iterator(ptr_+size_);
 }
 
-slow_array::~slow_array(){
+ivy::~ivy(){
 	deallocate(ptr_);
 }
 

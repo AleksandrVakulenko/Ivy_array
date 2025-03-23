@@ -43,7 +43,7 @@ public:
 	}
 };
 
-class slow_array final {
+class ivy final {
 	int size_;
 	int ptr_;
 	
@@ -51,17 +51,17 @@ class slow_array final {
 	
 public:
 	
-	slow_array(int size);
+	ivy(int size);
 	
-	slow_array(int size, int);
+	ivy(int size, int);
 	
-	slow_array(std::initializer_list<int> L);
+	ivy(std::initializer_list<int> L);
 	
-	slow_array(const slow_array& arr);
+	ivy(const ivy& arr);
 	
-	slow_array(slow_array&& arr) : slow_array(arr) {};
+	ivy(ivy&& arr) : ivy(arr) {};
 	
-	slow_array operator=(const slow_array& arr){
+	ivy operator=(const ivy& arr){
 		if(ptr_ == arr.ptr_)
 			return *this;
 		deallocate(ptr_);
@@ -73,21 +73,21 @@ public:
 		return *this;
 	};
 	
-	slow_array operator=(slow_array&& arr){
+	ivy operator=(ivy&& arr){
 		(*this) = arr;
 		return *this;
 	};
 	
-	slow_array(iterator b_it, iterator e_it);
+	ivy(iterator b_it, iterator e_it);
 	
-	~slow_array();
+	~ivy();
 	
 	
 	void make_rand();
 	
 	void push_back(int v);
 	
-	void push_back(const slow_array& arr);
+	void push_back(const ivy& arr);
 
 	int& operator[](int index);
 	

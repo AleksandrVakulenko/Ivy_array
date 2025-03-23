@@ -5,13 +5,13 @@
 //#include <stdlib.h>
 
 #include "GLFW/glfw3.h"
-#include "slow_array.h"
+#include "ivy.h"
 #include "utils.h"
 
 
 
 
-void slow_sort(slow_array& arr){
+void slow_sort(ivy& arr){
 	for (int i = 0; i < arr.size()-1; i++){
 		int min = 100;
 		int min_ind = -1;
@@ -27,7 +27,7 @@ void slow_sort(slow_array& arr){
 	}
 }
 
-void slow_sort2(slow_array& arr){
+void slow_sort2(ivy& arr){
 	bool is_sorted = false;
 	int k = arr.size();
 	while(!is_sorted){
@@ -43,23 +43,23 @@ void slow_sort2(slow_array& arr){
 }
 
 
-slow_array gen_rand(int size){
-	slow_array tmp(size);
+ivy gen_rand(int size){
+	ivy tmp(size);
 	for(auto& el:tmp){
 		el = rand()%99;
 	}
 	return tmp;
 }
 
-slow_array foo(slow_array arr){
-	slow_array tmp(arr.size());
+ivy foo(ivy arr){
+	ivy tmp(arr.size());
 	for (int i = 0; i < arr.size(); i++){
 		tmp[i] = arr[i];
 	}
 	return tmp;
 }
 
-void print(slow_array arr){
+void print(ivy arr){
 	for(int i = 0; i < arr.size(); i++){
 		std::cout << i << " : " << (arr)[i] << '\n';
 	}
@@ -67,15 +67,15 @@ void print(slow_array arr){
 
 
 // Merge two subarrays L and M into arr
-void merge(slow_array &arr, int p, int q, int r) {
+void merge(ivy &arr, int p, int q, int r) {
   
   // Create L ← A[p..q] and M ← A[q+1..r]
   int n1 = q - p + 1;
   int n2 = r - q;
   
   // Use std::vector to dynamically allocate arrays
-  slow_array L(n1);
-  slow_array M(n2);
+  ivy L(n1);
+  ivy M(n2);
   
   for (int i = 0; i < n1; i++)
     L[i] = arr[p + i];
@@ -115,7 +115,7 @@ void merge(slow_array &arr, int p, int q, int r) {
 }
 
 // Divide the array into two subarrays, sort them and merge them
-void mergeSort(slow_array &arr, int l, int r) {
+void mergeSort(ivy &arr, int l, int r) {
   if (l < r) {
     // m is the point where the array is divided into two subarrays
     int m = l + (r - l) / 2;
@@ -128,16 +128,16 @@ void mergeSort(slow_array &arr, int l, int r) {
 }
 
 
-slow_array gen_partially_sorted(int size){
+ivy gen_partially_sorted(int size){
 	int size1 = size/3;
 	int size2 = size/4;
 	int size3 = size - size1 - size2;
 	//std::cout << size1<< ' ' <<size2<<' '<<size3<<'\n';
 	
-	slow_array arr = gen_rand(size1);
+	ivy arr = gen_rand(size1);
 	std::sort(arr.begin(), arr.end());
 	
-	slow_array tmp = gen_rand(size2);
+	ivy tmp = gen_rand(size2);
 	std::sort(tmp.begin(), tmp.end());
 	arr.push_back(tmp);
 
@@ -151,7 +151,7 @@ slow_array gen_partially_sorted(int size){
 
 
 
-void heapify(slow_array& arr, int n, int i) {
+void heapify(ivy& arr, int n, int i) {
     int largest = i;      // Инициализируем корень как наибольший элемент
     int left = 2 * i + 1; // Левый потомок
     int right = 2 * i + 2; // Правый потомок
@@ -174,7 +174,7 @@ void heapify(slow_array& arr, int n, int i) {
 }
 
 // Основная функция пирамидальной сортировки
-void heapSort(slow_array& arr) {
+void heapSort(ivy& arr) {
     int n = arr.size();
 
     // Построение max-кучи (heap)
@@ -189,7 +189,7 @@ void heapSort(slow_array& arr) {
     }
 }
 
-void combSort(slow_array& arr) {
+void combSort(ivy& arr) {
     int n = arr.size();
     int gap = n; // Начальный разрыв (gap)
     const double shrinkFactor = 1.3; // Коэффициент уменьшения разрыва
@@ -214,53 +214,61 @@ void user_thread(){
 
 	double time_1, time_2;
 	int N = 200;
+
 	
 	/*
 	{
-	slow_array arr = gen_partially_sorted(N);
-	pause(1);
+	ivy arr = gen_rand(N);
+	std::cout << "slow_sort: ";
 	time_1 = glfwGetTime();
 		slow_sort2(arr);
 	time_2 = glfwGetTime();
-	std::cout << "slow_sort: " << time_2 - time_1 << " s \n";
-	{
-	*/
+	std::cout << time_2 - time_1 << " s \n";
+	}
+	//*/
 	
 	{
 	pause(1);
-	slow_array arr = gen_rand(N);
+	ivy arr = gen_rand(N);
+	std::cout << "combSort: ";
 	time_1 = glfwGetTime();
 		combSort(arr);
 	time_2 = glfwGetTime();
-	std::cout << "combSort: " << time_2 - time_1 << " s \n";
+	std::cout << time_2 - time_1 << " s \n";
 	}
 	
+	/*
 	{
 	pause(1);
-	slow_array arr = gen_rand(N);
+	ivy arr = gen_rand(N);
+	std::cout << "heapSort: ";
 	time_1 = glfwGetTime();
 		heapSort(arr);
 	time_2 = glfwGetTime();
-	std::cout << "heapSort: " << time_2 - time_1 << " s \n";
+	std::cout << time_2 - time_1 << " s \n";
 	}
+	//*/
 	
 	{
 	pause(1);
-	slow_array arr = gen_rand(N);
+	ivy arr = gen_rand(N);
+	std::cout << "Merge sort: ";
 	time_1 = glfwGetTime();
 		mergeSort(arr, 0, arr.size()-1);
 	time_2 = glfwGetTime();
-	std::cout << "Merge sort: " << time_2 - time_1 << " s \n";
+	std::cout << time_2 - time_1 << " s \n";
 	}
 
 	{
 	pause(1);
-	slow_array arr = gen_rand(N);
+	ivy arr = gen_rand(N);
+	std::cout << "std::sort: ";
 	time_1 = glfwGetTime();
 		std::sort(arr.begin(), arr.end());
 	time_2 = glfwGetTime();
-	std::cout << "std::sort: " << time_2 - time_1 << " s \n";
+	std::cout << time_2 - time_1 << " s \n";
 	}
+
 
 }
 

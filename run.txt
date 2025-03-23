@@ -1,5 +1,5 @@
 // old
-g++ main.cpp slow_array.cpp drawer.cpp user_thread.cpp color.cpp memory.cpp -Llib -lglfw3 -lopengl32 -lgdi32 -DSLOW
+g++ main.cpp ivy.cpp drawer.cpp user_thread.cpp color.cpp memory.cpp ivy.cpp -Llib -lglfw3 -lopengl32 -lgdi32 -DSLOW
 
 
 // BUILD LIB SCRIPT (build_libs.bat)
@@ -8,12 +8,13 @@ g++ main.cpp -O2 -c -o obj_files\main.o
 g++ drawer.cpp -O2 -c -o obj_files\drawer.o
 g++ color.cpp -O2 -c -o obj_files\color.o
 g++ memory.cpp -O2 -DSLOW -c -o obj_files\memory.o 
+g++ ivy.cpp -O2 -c -o obj_files\ivy.o
 
-ar rcs lib\libslowarr.a .\obj_files\main.o .\obj_files\color.o .\obj_files\drawer.o .\obj_files\memory.o
+ar rcs lib\libivyarr.a .\obj_files\main.o .\obj_files\color.o .\obj_files\drawer.o .\obj_files\memory.o .\obj_files\ivy.o
 
 rmdir /s /q .\obj_files
 
 
 // USE LIB (run.bat)
-g++ -o main.exe user_thread.cpp -O2 -Llib -lslowarr -lglfw3 -lopengl32 -lgdi32
+g++ -o main.exe user_thread.cpp -O2 -Llib -livyarr -lglfw3 -lopengl32 -lgdi32
 main.exe
