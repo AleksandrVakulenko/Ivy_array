@@ -1,0 +1,1 @@
+g++ demo_01_ivy.cpp -O2 -I. -Llib -livyarr -lglfw3 -lopengl32 -lgdi32

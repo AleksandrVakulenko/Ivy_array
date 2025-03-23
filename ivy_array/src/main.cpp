@@ -23,7 +23,7 @@ int main() {
 		
 		glfwInit();
 		GLFWwindow* window = glfwCreateWindow(width, height,
-			"Ivy memory map V1.1.0", nullptr, nullptr);
+			"Ivy memory map V1.1.2", nullptr, nullptr);
 		glfwMakeContextCurrent(window);
 		glLoadIdentity();
 		glScalef(1/(width/2.0), -1/(height/2.0), 1);

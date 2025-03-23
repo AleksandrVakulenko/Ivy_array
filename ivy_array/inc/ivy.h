@@ -1,5 +1,7 @@
 #pragma once
 #include <initializer_list>
+#include <stdexcept>
+#include <utility>
 
 class iterator final {
 	int itptr_;
@@ -40,6 +42,7 @@ class ivy final {
 	int ptr_;
 
 	void realloc(int new_size);
+	void make_rand();
 	
 public:
 	
@@ -53,9 +56,7 @@ public:
 	
 	ivy operator=(const ivy& arr);
 	ivy operator=(ivy&& arr);
-	
-	void make_rand();
-	
+
 	void push_back(int v);
 	void push_back(const ivy& arr);
 

@@ -163,6 +163,9 @@ void print_mem_map(){
 
 
 int allocate(int size){
+	if(!is_init_memory)
+		throw std::runtime_error(
+		"Failed to create ivy(): Memory is not initialized");
 	if (size > memory_size)
 		throw std::runtime_error("Not enought memory");
 	//print_mem_map();

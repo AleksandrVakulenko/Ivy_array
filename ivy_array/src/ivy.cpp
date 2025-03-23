@@ -69,22 +69,24 @@ bool iterator::operator<=(const iterator& it) const{
 }
 
 ivy::ivy(int size){
+	if (size <= 0)
+		throw std::runtime_error("size of ivy must be > 0");
 	size_ = size;
 	ptr_ = allocate(size_);
 	if (ptr_ == -1)
 		throw std::runtime_error("Bag allocation in ivy");
 }
 
-ivy::ivy(int size, int value){
-	size_ = size;
-	ptr_ = allocate(size_);
-	if (ptr_ == -1)
-		throw std::runtime_error("Bag allocation in ivy");
-	if (value == -1)
+ivy::ivy(int size, int value) : ivy(size) {
+	if (value == -1) {
 		make_rand();
-	if ((value >= 0) && (value <=99))
+	} else {
+		if ((value < 0) || (value >99))
+			throw std::runtime_error(
+				"init value of ivy must be in range [0, 99]");
 		for (int i = 0; i < size_; i++)
-			(*this)[i] = value;
+			(*this)[i] = value;	
+	}
 }
 
 ivy::ivy(std::initializer_list<int> L){

@@ -1,14 +1,9 @@
+#include "ivy_array/inc/ivy.h"
+#include "ivy_array/inc/utils.h"
 
 #include <iostream>
 #include <vector>
 #include <algorithm>
-//#include <stdlib.h>
-
-#include "GLFW/glfw3.h"
-#include "ivy_array/inc/ivy.h"
-#include "ivy_array/inc/utils.h"
-
-
 
 
 void slow_sort(ivy& arr){
@@ -41,30 +36,6 @@ void slow_sort2(ivy& arr){
 		}
 	}
 }
-
-
-ivy gen_rand(int size){
-	ivy tmp(size);
-	for(auto& el:tmp){
-		el = rand()%99;
-	}
-	return tmp;
-}
-
-ivy foo(ivy arr){
-	ivy tmp(arr.size());
-	for (int i = 0; i < arr.size(); i++){
-		tmp[i] = arr[i];
-	}
-	return tmp;
-}
-
-void print(ivy arr){
-	for(int i = 0; i < arr.size(); i++){
-		std::cout << i << " : " << (arr)[i] << '\n';
-	}
-}
-
 
 // Merge two subarrays L and M into arr
 void merge(ivy &arr, int p, int q, int r) {
@@ -127,30 +98,6 @@ void mergeSort(ivy &arr, int l, int r) {
   }
 }
 
-
-ivy gen_partially_sorted(int size){
-	int size1 = size/3;
-	int size2 = size/4;
-	int size3 = size - size1 - size2;
-	//std::cout << size1<< ' ' <<size2<<' '<<size3<<'\n';
-	
-	ivy arr = gen_rand(size1);
-	std::sort(arr.begin(), arr.end());
-	
-	ivy tmp = gen_rand(size2);
-	std::sort(tmp.begin(), tmp.end());
-	arr.push_back(tmp);
-
-	tmp = gen_rand(size3);
-	std::sort(tmp.begin(), tmp.end());
-	arr.push_back(tmp);
-	
-	return arr;
-}
-
-
-
-
 void heapify(ivy& arr, int n, int i) {
     int largest = i;      // Инициализируем корень как наибольший элемент
     int left = 2 * i + 1; // Левый потомок
@@ -173,7 +120,6 @@ void heapify(ivy& arr, int n, int i) {
     }
 }
 
-// Основная функция пирамидальной сортировки
 void heapSort(ivy& arr) {
     int n = arr.size();
 
@@ -210,69 +156,77 @@ void combSort(ivy& arr) {
     }
 }
 
-void user_thread(){
 
+void TEST_SORT(int N){
 	double time_1, time_2;
-	int N = 200;
-
 	
-	/*
+	std::cout << "\n    TEST SORT FOR N = " << N << ": " << '\n';
+	
 	{
-	ivy arr = gen_rand(N);
+	ivy arr(N, -1);
 	std::cout << "slow_sort: ";
 	time_1 = glfwGetTime();
 		slow_sort2(arr);
 	time_2 = glfwGetTime();
 	std::cout << time_2 - time_1 << " s \n";
 	}
-	//*/
 	
-	/*
+	
+	
 	{
 	pause(1);
-	ivy arr = gen_rand(N);
+	ivy arr(N, -1);
 	std::cout << "combSort: ";
 	time_1 = glfwGetTime();
 		combSort(arr);
 	time_2 = glfwGetTime();
 	std::cout << time_2 - time_1 << " s \n";
 	}
-	//*/
 	
-	/*
+	
+	
 	{
 	pause(1);
-	ivy arr = gen_rand(N);
+	ivy arr(N, -1);
 	std::cout << "heapSort: ";
 	time_1 = glfwGetTime();
 		heapSort(arr);
 	time_2 = glfwGetTime();
 	std::cout << time_2 - time_1 << " s \n";
 	}
-	//*/
 	
-	/*
+	
+	
 	{
 	pause(1);
-	ivy arr = gen_rand(N);
+	ivy arr(N, -1);
 	std::cout << "Merge sort: ";
 	time_1 = glfwGetTime();
 		mergeSort(arr, 0, arr.size()-1);
 	time_2 = glfwGetTime();
 	std::cout << time_2 - time_1 << " s \n";
 	}
-	//*/
+	
 
 	{
 	pause(1);
-	ivy arr = gen_rand(N);
+	ivy arr(N, -1);
 	std::cout << "std::sort: ";
 	time_1 = glfwGetTime();
 		std::sort(arr.begin(), arr.end());
 	time_2 = glfwGetTime();
 	std::cout << time_2 - time_1 << " s \n";
-	}
+	}	
 
+}
+
+void user_thread(){
+
+	TEST_SORT(25);
+	TEST_SORT(50);
+	TEST_SORT(100);
+	TEST_SORT(200);
+	TEST_SORT(400);
 
 }
 
