@@ -5,8 +5,8 @@
 //#include <stdlib.h>
 
 #include "GLFW/glfw3.h"
-#include "ivy.h"
-#include "utils.h"
+#include "ivy_array/inc/ivy.h"
+#include "ivy_array/inc/utils.h"
 
 
 

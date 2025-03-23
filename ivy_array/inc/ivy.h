@@ -1,9 +1,5 @@
 #pragma once
 #include <initializer_list>
-#include <stdexcept>
-#include <utility>
-#include "memory.h"
-#include "graphics.h"
 
 class iterator final {
 	int itptr_;
