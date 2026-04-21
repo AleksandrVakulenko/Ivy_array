@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include "ivy.h"
 #include "memory.h"
+#include <iostream>
 //#include "graphics.h"
 
 iterator::iterator(int p) : itptr_(p) {}
@@ -68,11 +69,20 @@ bool iterator::operator<=(const iterator& it) const{
 	return !(*this > it);
 }
 
+ivy::ivy(){
+	size_ = 0;
+	capacity_ = 1;
+	ptr_ = allocate(capacity_);
+	if (ptr_ == -1)
+		throw std::runtime_error("Bag allocation in ivy");
+}
+
 ivy::ivy(int size){
 	if (size <= 0)
 		throw std::runtime_error("size of ivy must be > 0");
 	size_ = size;
-	ptr_ = allocate(size_);
+	capacity_ = size;
+	ptr_ = allocate(capacity_);
 	if (ptr_ == -1)
 		throw std::runtime_error("Bag allocation in ivy");
 }
@@ -91,7 +101,8 @@ ivy::ivy(int size, int value) : ivy(size) {
 
 ivy::ivy(std::initializer_list<int> L){
 	size_ = L.size();
-	ptr_ = allocate(size_);
+	capacity_ = size_;
+	ptr_ = allocate(capacity_);
 	if (ptr_ == -1)
 		throw std::runtime_error("Bag allocation in ivy");
 	auto p = ptr_;
@@ -102,29 +113,24 @@ ivy::ivy(std::initializer_list<int> L){
 
 ivy::ivy(const ivy& arr){
 	size_ = arr.size_;
-	ptr_ = allocate(size_);
+	capacity_ = arr.capacity_;
+	ptr_ = allocate(capacity_);
 	
 	for (int i = 0; i < arr.size_; i++){
 		(*this)[i] = arr[i];
 	}
 }
 
-ivy::ivy(ivy&& arr) : ivy(arr) {};
-
 ivy ivy::operator=(const ivy& arr){
 	if(ptr_ == arr.ptr_)
 		return *this;
 	deallocate(ptr_);
-	size_ = arr.size();
-	ptr_ = allocate(size_);
+	size_ = arr.size_;
+	capacity_ = arr.capacity_;
+	ptr_ = allocate(capacity_);
 	for (int i = 0; i < arr.size_; i++){
 		(*this)[i] = arr[i];
 	}
-	return *this;
-};
-
-ivy ivy::operator=(ivy&& arr){
-	(*this) = arr;
 	return *this;
 };
 
@@ -133,9 +139,10 @@ ivy::ivy(iterator b_it, iterator e_it){
 	if (size <= 0)
 		throw std::runtime_error("second iterator must be greater than first");
 	size_ = size;
-	ptr_ = allocate(size_);
+	capacity_ = size_;
+	ptr_ = allocate(capacity_);
 	if (ptr_ == -1)
-		throw std::runtime_error("Bag allocation in ivy");
+		throw std::runtime_error("Bad allocation in ivy");
 	
 	int i = 0;
 	while(b_it != e_it) {
@@ -145,35 +152,45 @@ ivy::ivy(iterator b_it, iterator e_it){
 	}
 }
 
-void ivy::realloc(int new_size){
-	int need_size = new_size - size_;
-	bool flag = extend(ptr_, need_size);
-	if (flag){
-		size_ = new_size;
-		return;
+void ivy::realloc(int new_cap){
+	int need_cap = new_cap - capacity_;
+	if (need_cap > 0){
+		bool flag = extend(ptr_, need_cap);
+		if (flag){
+			capacity_ = new_cap;
+			return;
+		}
+		int new_ptr = allocate(new_cap);
+		for (int i = 0; i<size_; i++){
+			int el = mem_get_elem(ptr_+i);
+			mem_set_elem(new_ptr+i, el);
+		}
+		deallocate(ptr_);
+		ptr_ = new_ptr;
+		capacity_ = new_cap;
+	} else {
+		
 	}
-	int new_ptr = allocate(new_size);
-	for (int i = 0; i<size_; i++){
-		int el = mem_get_elem(ptr_+i);
-		mem_set_elem(new_ptr+i, el);
-	}
-	deallocate(ptr_);
-	ptr_ = new_ptr;
-	size_ = new_size;
 }
 
 void ivy::push_back(int v){
-	realloc(size_+1);
-	(*this)[size_-1] = v;
+	if (size_+1 > capacity_)
+		realloc(capacity_+1);
+
+	bool flag = size_ == 0;
+	(*this)[size_] = v;
+	if (!flag)
+		size_++;
 }
 
 void ivy::push_back(const ivy& arr){
-	int arr_size = arr.size();
+	int in_arr_size = arr.size();
 	int end_pos = size_;
 	realloc(size_+arr.size());
-	for (int i = 0; i<arr_size; i++){
+	for (int i = 0; i < in_arr_size; i++){
 		(*this)[end_pos+i] = arr[i];
 	}
+	size_ = size_ + arr.size();
 }
 
 void ivy::make_rand(){
@@ -183,6 +200,9 @@ void ivy::make_rand(){
 
 
 int& ivy::operator[](int index) {
+	if (size_ == 0 && index == 0){
+		size_ = 1;
+	}
 	return get_line_ptr(ptr_+index).get_p2y_ref();
 }
 

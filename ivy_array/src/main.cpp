@@ -14,7 +14,7 @@ void user_thread_wrapper(){
 	user_thread();
 	std::cout << "STOP USER THREAD\n";
 	print_allocs_num();
-    user_thread_active = false;
+	user_thread_active = false;
 }
 
 int main() {
@@ -23,7 +23,7 @@ int main() {
     
     glfwInit();
     GLFWwindow* window = glfwCreateWindow(width, height,
-        "Ivy memory map V1.1.2", nullptr, nullptr);
+        "Ivy memory map V1.1.3", nullptr, nullptr);
     glfwMakeContextCurrent(window);
     glLoadIdentity();
     glScalef(1/(width/2.0), -1/(height/2.0), 1);

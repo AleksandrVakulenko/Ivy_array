@@ -39,6 +39,7 @@ public:
 
 class ivy final {
 	int size_;
+	int capacity_;
 	int ptr_;
 
 	void realloc(int new_size);
@@ -46,16 +47,15 @@ class ivy final {
 	
 public:
 	
+	ivy();
 	ivy(int size);
 	ivy(int size, int value);
 	ivy(iterator b_it, iterator e_it);
 	ivy(std::initializer_list<int> L);
 	ivy(const ivy& arr);
-	ivy(ivy&& arr);
 	~ivy();
 	
 	ivy operator=(const ivy& arr);
-	ivy operator=(ivy&& arr);
 
 	void push_back(int v);
 	void push_back(const ivy& arr);
